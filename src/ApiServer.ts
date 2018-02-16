@@ -1,13 +1,18 @@
 import * as express from "express";
 import * as logger from "morgan";
 import * as bodyParser from "body-parser";
-import { Endpoint } from "./lib/Endpoint";
-import AuthType from "./routes/controller/viron_authtype";
+import { Endpoint, HandlerFunctionType } from "./lib/Endpoint";
+import AuthType from "./routes/viron_authtype";
 import Root from "./routes/Root";
+import Swagger from "./routes/Swagger";
 
 class ApiServer {
   public express: express.Application;
-  public endpoints: Endpoint<any>[] = [new Root(), new AuthType()];
+  public endpoints: Endpoint<any>[] = [
+    new Root(),
+    new Swagger(),
+    new AuthType()
+  ];
   constructor() {
     this.express = express();
     this.setMiddleWares();
@@ -24,7 +29,7 @@ class ApiServer {
   private routes() {
     const router = express.Router();
     this.endpoints.forEach(endpoint => {
-      this.express.get(endpoint.route, endpoint.handler);
+      this.express.all(endpoint.route, endpoint.handler);
       this.express.use(endpoint.route, router);
     });
   }

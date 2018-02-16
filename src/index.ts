@@ -34,3 +34,5 @@ const onListening = () => {
 
 server.on("error", onError);
 server.on("listening", onListening);
+
+console.log(`server listening:http://localhost:${port}/`);
